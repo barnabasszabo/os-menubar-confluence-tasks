@@ -1,0 +1,29 @@
+<div class="container">
+
+  <form name="login" #loginForm="ngForm" (ngSubmit)="doLogin(loginForm)">
+
+    <div class="form-group">
+      <label for="email1">Your email address</label>
+      <input type="email" class="form-control" id="email1" placeholder="Enter email" [(ngModel)]="connInfo.email" name="email" >
+    </div>
+
+    <div class="form-group">
+      <label for="token1">API Token</label>
+      <input type="text" class="form-control" id="token1" placeholder="abcd1234" [(ngModel)]="connInfo.token" name="token">
+      <small class="form-text text-muted">Token generation url: <a href="https://id.atlassian.com/manage-profile/security/api-tokens">https://id.atlassian.com/manage-profile/security/api-tokens</a></small>
+    </div>
+
+    <div class="form-group">
+      <label for="url1">Confluence URL</label>
+      <input type="text" class="form-control" id="url1" placeholder="https://xyz.atlassian.net/wiki" [(ngModel)]="connInfo.url" name="url">
+      <small class="form-text text-muted">Confluence URL like: <strong>https://xyz.atlassian.net/wiki</strong></small>
+    </div>
+
+    <div class="alert alert-danger" role="alert" *ngIf="hasError">
+      Invalid form data!
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+
+</div>

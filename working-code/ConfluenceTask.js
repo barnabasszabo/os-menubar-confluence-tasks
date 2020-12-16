@@ -26,6 +26,8 @@ module.exports =  class ConfluenceTask {
             this.myself = await this.get(`${this.baseUrl}/user/current?expand=personalSpace`);
             this.log(`myself`, this.myself);
         }
+
+        if (!this.myself) { throw new Error(`No currently logged in user!`); }
         return this.myself;
     }
 
@@ -33,12 +35,12 @@ module.exports =  class ConfluenceTask {
         const myself = await this.getMyself();
         const myAllTasks = await this.get(`${this.baseUrl}/inlinetasks/search?assignee=${myself.accountId}`);
         this.log(`myTasks`, myAllTasks);
-        return myAllTasks;
+        return myAllTasks || [];
     }
 
     // taskbody == <span class=\"placeholder-inline-tasks\">test content ${(count + 1)} <ac:link><ri:user ri:userkey=\"8a7f808974eb39120174f94654350712\" /></ac:link></span>
     async addNewTask(taskBody) {
-        const myTaskPageContent = await this.getMyTaskPageContent();
+        const myTaskPageContent = await this.getOrCreateMyTaskPageContent();
         const count = (myTaskPageContent.body.storage.value.match(/<ac:task-id>/g) || []).length;
         const newTask = `
             <ac:task-list>
@@ -85,18 +87,38 @@ module.exports =  class ConfluenceTask {
         const myself = await this.getMyself();
         return `My Todo list: ${myself.publicName}`;
     }
-    async getMyTaskPageContent() {
+    async getOrCreateMyTaskPageContent() {
         const title = await this.getMyTaskPageTitle();
         const mySpace = await this.getOrCreateMySpace();
         const myTaskPageDescriptorList = await this.get(`${this.baseUrl}/content?type=page&spaceKey=${mySpace.key}&title=${title}&status=current&expand=version,body.storage`);
-        const myTaskPageContent = myTaskPageDescriptorList.results[0];
-        this.log(`myTaskPageContent`, myTaskPageContent);
-        return myTaskPageContent;
+        if (myTaskPageDescriptorList.results.length == 0) {
+            const pageData = {
+                title: title,
+                type: "page",
+                space: {
+                  key: mySpace.key
+                },
+                status: "current",
+                body: {
+                  storage: {
+                    value: "<ac:structured-macro ac:name=\"warning\" ac:schema-version=\"1\" ac:macro-id=\"6b052825-4570-42ef-b21a-5be3908d26c9\"><ac:rich-text-body><p><strong>This page is generated!</strong> Please do not edit manually!</p></ac:rich-text-body></ac:structured-macro>",
+                    representation: "storage"
+                  }
+                }
+            };
+            console.log(`Missing task page! Create it!`, pageData);
+            const createResponse = await this.post(`${this.baseUrl}/content`, pageData);
+            console.log(`Create page response:`, JSON.stringify(createResponse, null, 4));
+            return await this.getOrCreateMyTaskPageContent();
+        } else {
+            const myTaskPageContent = myTaskPageDescriptorList.results[0];
+            this.log(`myTaskPageContent`, myTaskPageContent);
+            return myTaskPageContent;
+        }
     }
 
-
     log(context, data) {
-        // fs.writeFileSync(`sample-responses/${context}.json`, JSON.stringify(data, null, 4));
+        fs.writeFileSync(`sample-responses/${context}.json`, JSON.stringify(data, null, 4));
     }
 
     async get(url) {

@@ -1,6 +1,6 @@
 
 const ConfluenceTask = require(`./ConfluenceTask`);
-const localConfig = require(`./localconfig.js`);
+const localConfig = require(`./localconfig.js`); 
 
 console.log(`local config`, localConfig.config);
 
