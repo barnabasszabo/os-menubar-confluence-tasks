@@ -13,19 +13,21 @@ export class DisplayTaskBody implements PipeTransform {
 
     console.log(this.sanitized.bypassSecurityTrustHtml(task.body));
 
-    this.convertDateTag(task.body);
+    let convertedStr = this.convertDateTag(task.body);
 
-    return this.sanitized.bypassSecurityTrustHtml(task.body);
+    return this.sanitized.bypassSecurityTrustHtml(convertedStr);
   }
 
   convertDateTag(value: string) {
+    let ret = value;
     // Convert format FROM <time datetime="2020-12-17" /> TO <span class="confluence-datetime">2020-12-17</span>
-    const allTimes = value.match(/<time datetime="([\d-])+"\s*\/>/ig) || [];
+    const allTimes = ret.match(/<time datetime="([\d-])+"\s*\/>/ig) || [];
     for (let i = 0; i < allTimes.length; i++) {
       const time = allTimes[i];
       const date = time.match(/"([\d-])+"/ig)[0].replace('"', '').replace('"', '');
-      value = value.replace(time, `<span class="confluence-datetime">${date}</span>`);
+      ret = ret.replace(time, `<span class="confluence-datetime">${date}</span>`);
     }
+    return ret;
   }
 
 }
