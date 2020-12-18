@@ -1,3 +1,5 @@
+import { TaskDTO } from './TaskDTO';
+import { isatty } from 'tty';
 import { ConfluenceConnection } from './ConfluenceConnection.model';
 
 const fetch = require('node-fetch');
@@ -29,11 +31,11 @@ export class ConfluenceApi {
         return this.myself;
     }
 
-    async getMyTasks() {
+    async getMyTasks(isActive = true): Promise<TaskDTO[]> {
         const myself = await this.getMyself();
-        const myAllTasks = await this.get(`${this.baseUrl}/inlinetasks/search?assignee=${myself.accountId}`);
+        const myAllTasks = await this.get(`${this.baseUrl}/inlinetasks/search?start=0&limit=5000&assignee=${myself.accountId}&status=${(isActive ? 'incomplete' : 'complete' )}`);
         this.log(`myTasks`, myAllTasks);
-        return myAllTasks || [];
+        return myAllTasks.results || [];
     }
 
     // taskbody == <span class=\"placeholder-inline-tasks\">test content ${(count + 1)} <ac:link><ri:user ri:userkey=\"8a7f808974eb39120174f94654350712\" /></ac:link></span>
@@ -116,8 +118,8 @@ export class ConfluenceApi {
     }
 
     log(context: string, data: any) {
-      console.log(context, JSON.stringify(data, null, 4));
-        // fs.writeFileSync(`sample-responses/${context}.json`, JSON.stringify(data, null, 4));
+      // console.log(context, JSON.stringify(data, null, 4));
+      // fs.writeFileSync(`sample-responses/${context}.json`, JSON.stringify(data, null, 4));
     }
 
     async get(url: string): Promise<any> {

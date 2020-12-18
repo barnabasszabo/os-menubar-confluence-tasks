@@ -14,13 +14,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { TaskComponent } from './task/task.component';
-
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {MatListModule} from '@angular/material/list';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TaskSortableHeaderDirective } from './task-sortable-header.directive';
+import { TimeComponent } from './confluence/confluenceComponents/time/time.component';
+import { DisplayTaskBody } from './display-task-body.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -28,9 +25,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, TaskComponent],
+  declarations: [AppComponent, LoginComponent, TaskComponent, TaskSortableHeaderDirective, TimeComponent, DisplayTaskBody,],
   imports: [
     BrowserModule, BrowserAnimationsModule,
+    NgbModule,
     FormsModule,
     HttpClientModule,
     CoreModule,
@@ -42,13 +40,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         deps: [HttpClient]
       }
     }),
-
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    MatListModule,
-    MatDatepickerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

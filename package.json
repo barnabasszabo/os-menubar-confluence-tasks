@@ -42,9 +42,8 @@
   },
   "dependencies": {
     "@angular/animations": "^11.0.0 || ^12.0.0-0",
-    "@angular/cdk": "11.0.3",
     "@angular/forms": "^11.0.0 || ^12.0.0-0",
-    "@angular/material": "11.0.3",
+    "@ng-bootstrap/ng-bootstrap": "8.0.0",
     "bluebird": "^3.7.2",
     "node-fetch": "^2.6.1"
   },
