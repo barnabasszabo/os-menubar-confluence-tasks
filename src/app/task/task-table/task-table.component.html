@@ -1,0 +1,33 @@
+<form>
+  <div class="form-group form-inline">
+      Full text search: <input class="form-control ml-2" type="text" name="filter" [(ngModel)]="filter" />
+  </div>
+</form>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col"></th>
+      <th scope="col" sortable="body" (sort)="onSort($event)">Task</th>
+      <th scope="col" sortable="dueDate" (sort)="onSort($event)" >Due date</th>
+      <th scope="col">Page</th>
+      <th scope="col">Creator</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks; index as i">
+      <td>{{i+1}} <i class="fas fa-bug" (click)="openDebug(task)"></i></td>
+      <td>
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input checkbox-1x" id="checkBox{{i}}">
+
+        </div>
+      </td>
+      <td [innerHTML]="task | displayTaskBody | async"></td>
+      <td>{{task.dueDate | date: dataDisplayFormat}}</td>
+      <td>{{task.contentId | confluenceContentTitle | async}}</td>
+      <td>{{task.creator | confluenceUser | async}}</td>
+    </tr>
+  </tbody>
+</table>

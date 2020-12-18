@@ -15,6 +15,9 @@ export class ConfluenceApi {
 
     myself: any = null;
 
+    userCache = {};
+    pageCache = {};
+
     constructor(connInfo: ConfluenceConnection) {
         this.connInfo = connInfo;
         this.baseUrl = this.connInfo.url + `/rest/api`;
@@ -31,11 +34,21 @@ export class ConfluenceApi {
         return this.myself;
     }
 
+    async getUser(id: string) {
+      if (!id) { return null; }
+      if (!this.userCache[id]) {
+        this.userCache[id] = await this.get(`${this.baseUrl}/user?accountId=${id}`);
+      }
+      this.log(`user`, this.userCache[id]);
+      return this.userCache[id];
+    }
+
     async getMyTasks(isActive = true): Promise<TaskDTO[]> {
         const myself = await this.getMyself();
         const myAllTasks = await this.get(`${this.baseUrl}/inlinetasks/search?start=0&limit=5000&assignee=${myself.accountId}&status=${(isActive ? 'incomplete' : 'complete' )}`);
-        this.log(`myTasks`, myAllTasks);
-        return myAllTasks.results || [];
+        const result: TaskDTO[] = myAllTasks.results || [];
+        this.log(`myTasks`, result);
+        return result;
     }
 
     // taskbody == <span class=\"placeholder-inline-tasks\">test content ${(count + 1)} <ac:link><ri:user ri:userkey=\"8a7f808974eb39120174f94654350712\" /></ac:link></span>
@@ -86,6 +99,17 @@ export class ConfluenceApi {
     async getMyTaskPageTitle() {
         const myself = await this.getMyself();
         return `My Todo list: ${myself.publicName}`;
+    }
+    async getPageData(pageId: string | number) {
+      if (!pageId) { return null; }
+      if (!this.pageCache[pageId]) {
+        try {
+          this.pageCache[pageId] = await this.get(`${this.baseUrl}/content/${pageId}`);
+        } catch (e) {
+          console.warn(`Error in page content`, pageId);
+         }
+      }
+      return this.pageCache[pageId] || null;
     }
     async getOrCreateMyTaskPageContent() {
         const title = await this.getMyTaskPageTitle();

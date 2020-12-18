@@ -28,40 +28,13 @@
     <li [ngbNavItem]="1">
       <a ngbNavLink>Active tasks</a>
       <ng-template ngbNavContent>
-          <form>
-            <div class="form-group form-inline">
-                Full text search: <input class="form-control ml-2" type="text" name="filter" [(ngModel)]="filter" />
-            </div>
-          </form>
-
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col"></th>
-                <th scope="col" sortable="body" (sort)="onSort($event)">Task</th>
-                <th scope="col" sortable="dueDate" (sort)="onSort($event)" >Due date</th>
-                <th scope="col" sortable="pageTitle" (sort)="onSort($event)" >Page</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let task of tasks; index as i">
-                <td>{{i}}</td>
-                <td>{{task.body}}</td>
-                <td [innerHTML]="task | displayTaskBody"></td>
-                <td>{{task.dueDate | date: dataDisplayFormat}}</td>
-                <td>{{task.pageTitle}}</td>
-              </tr>
-            </tbody>
-          </table>
+        <app-task-table [tasks]="activeTasks"></app-task-table>
       </ng-template>
     </li>
     <li [ngbNavItem]="2">
       <a ngbNavLink>Inactive tasks</a>
       <ng-template ngbNavContent>
-
-        {{tasks | json}}
-
+        <app-task-table [tasks]="finishedTasks"></app-task-table>
       </ng-template>
     </li>
   </ul>

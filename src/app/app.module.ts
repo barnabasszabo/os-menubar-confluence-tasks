@@ -16,8 +16,11 @@ import { LoginComponent } from './login/login.component';
 import { TaskComponent } from './task/task.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskSortableHeaderDirective } from './task-sortable-header.directive';
-import { TimeComponent } from './confluence/confluenceComponents/time/time.component';
-import { DisplayTaskBody } from './display-task-body.pipe';
+import { DisplayTaskBody } from './confluence/display-task-body.pipe';
+import { ConfluenceUserPipe } from './confluence/confluence-user.pipe';
+import { ConfluenceContentTitlePipe } from './confluence/confluence-content-title.pipe';
+import { TaskTableComponent } from './task/task-table/task-table.component';
+import { TaskDebugComponent } from './task/task-debug/task-debug.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -25,7 +28,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, TaskComponent, TaskSortableHeaderDirective, TimeComponent, DisplayTaskBody,],
+  declarations: [AppComponent, LoginComponent, TaskComponent, TaskSortableHeaderDirective, DisplayTaskBody, ConfluenceUserPipe, ConfluenceContentTitlePipe, TaskTableComponent, TaskDebugComponent,],
   imports: [
     BrowserModule, BrowserAnimationsModule,
     NgbModule,
@@ -41,6 +44,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       }
     }),
   ],
+  entryComponents: [TaskDebugComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

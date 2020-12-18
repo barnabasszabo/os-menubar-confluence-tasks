@@ -9,6 +9,5 @@ export interface TaskDTO {
   createDate?: number,
   dueDate?: number,
   completeDate?: number,
-  completeUser?: string,
-  pageTitle?: string
+  completeUser?: string
 }
