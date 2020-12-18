@@ -51,6 +51,10 @@ export class ConfluenceApi {
         return result;
     }
 
+    async checkTask(task: TaskDTO, isCheckedIn = true) {
+      await this.post(`${this.baseUrl}/inlinetasks/1/task/${task.contentId}/${task.id}/`, {"status": (isCheckedIn ? "CHECKED" : "UNCHECKED"), "trigger":"VIEW_PAGE"});
+    }
+
     // taskbody == <span class=\"placeholder-inline-tasks\">test content ${(count + 1)} <ac:link><ri:user ri:userkey=\"8a7f808974eb39120174f94654350712\" /></ac:link></span>
     async addNewTask(taskBody: string) {
         const myTaskPageContent = await this.getOrCreateMyTaskPageContent();

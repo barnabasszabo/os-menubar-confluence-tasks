@@ -1,3 +1,4 @@
+import { ConfluenceService } from './../../confluence/confluence.service';
 import { TaskDebugComponent } from './../task-debug/task-debug.component';
 import { TaskDTO } from './../../confluence/TaskDTO';
 import { SortEvent, TaskSortableHeaderDirective } from './../../task-sortable-header.directive';
@@ -15,20 +16,31 @@ export class TaskTableComponent implements OnInit {
 
   @ViewChildren(TaskSortableHeaderDirective) headers: QueryList<TaskSortableHeaderDirective>;
 
-  @Input() tasks: TaskDTO[] = [];
+  @Input() active: boolean;
 
+  tasks: TaskDTO[] = [];
   dataDisplayFormat = `fullDate`;
 
   filter: string;
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private confluenceService: ConfluenceService) { }
 
   ngOnInit(): void {
+    this.init().then().catch(e => console.error(e));
+  }
+
+  async init() {
+    this.tasks = await this.confluenceService.getConfluenceApi().getMyTasks(this.active);
   }
 
   openDebug(task: TaskDTO) {
     const modalRef = this.modalService.open(TaskDebugComponent);
     modalRef.componentInstance.task = task;
+  }
+
+  async checkTask(task) {
+    await this.confluenceService.getConfluenceApi().checkTask(task, true);
+
   }
 
   onSort({column, direction}: SortEvent) {

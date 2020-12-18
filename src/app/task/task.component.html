@@ -28,13 +28,13 @@
     <li [ngbNavItem]="1">
       <a ngbNavLink>Active tasks</a>
       <ng-template ngbNavContent>
-        <app-task-table [tasks]="activeTasks"></app-task-table>
+        <app-task-table [active]="true"></app-task-table>
       </ng-template>
     </li>
     <li [ngbNavItem]="2">
       <a ngbNavLink>Inactive tasks</a>
       <ng-template ngbNavContent>
-        <app-task-table [tasks]="finishedTasks"></app-task-table>
+        <app-task-table [active]="false"></app-task-table>
       </ng-template>
     </li>
   </ul>

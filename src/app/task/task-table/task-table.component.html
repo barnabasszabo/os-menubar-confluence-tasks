@@ -8,7 +8,7 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col"></th>
+      <th scope="col"><i class="fas fa-question" placement="right" ngbTooltip="NO API for task checking :("></i></th>
       <th scope="col" sortable="body" (sort)="onSort($event)">Task</th>
       <th scope="col" sortable="dueDate" (sort)="onSort($event)" >Due date</th>
       <th scope="col">Page</th>
@@ -20,8 +20,7 @@
       <td>{{i+1}} <i class="fas fa-bug" (click)="openDebug(task)"></i></td>
       <td>
         <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input checkbox-1x" id="checkBox{{i}}">
-
+          <input type="checkbox" class="form-check-input checkbox-1x" id="checkBox{{i}}" [disabled]="true">
         </div>
       </td>
       <td [innerHTML]="task | displayTaskBody | async"></td>
