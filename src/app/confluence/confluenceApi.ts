@@ -118,8 +118,16 @@ export class ConfluenceApi {
     async getOrCreateMyTaskPageContent() {
         const title = await this.getMyTaskPageTitle();
         const mySpace = await this.getOrCreateMySpace();
-        const myTaskPageDescriptorList = await this.get(`${this.baseUrl}/content?type=page&spaceKey=${mySpace.key}&title=${title}&status=current&expand=version,body.storage`);
-        if (myTaskPageDescriptorList.results.length == 0) {
+        try {
+          const myTaskPageDescriptorList = await this.get(`${this.baseUrl}/content?type=page&spaceKey=${mySpace.key}&title=${title}&status=current&expand=version,body.storage`);
+          if (myTaskPageDescriptorList.results.length == 0) {
+            throw new Error('Missing Page');
+          } else {
+              const myTaskPageContent = myTaskPageDescriptorList.results[0];
+              this.log(`myTaskPageContent`, myTaskPageContent);
+              return myTaskPageContent;
+          }
+        } catch (e) {
             const pageData = {
                 title: title,
                 type: "page",
@@ -135,13 +143,13 @@ export class ConfluenceApi {
                 }
             };
             console.log(`Missing task page! Create it!`, pageData);
-            const createResponse = await this.post(`${this.baseUrl}/content`, pageData);
-            console.log(`Create page response:`, JSON.stringify(createResponse, null, 4));
-            return await this.getOrCreateMyTaskPageContent();
-        } else {
-            const myTaskPageContent = myTaskPageDescriptorList.results[0];
-            this.log(`myTaskPageContent`, myTaskPageContent);
-            return myTaskPageContent;
+            try {
+              const createResponse = await this.post(`${this.baseUrl}/content`, pageData);
+              console.log(`Create page response:`, JSON.stringify(createResponse, null, 4));
+              return await this.getOrCreateMyTaskPageContent();
+            } catch (e) {
+              throw new Error(`Can not create personal task page: ${title} in space: ${mySpace.key}`);
+            }
         }
     }
 

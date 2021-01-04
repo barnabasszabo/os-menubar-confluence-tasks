@@ -20,7 +20,7 @@
       <td>{{i+1}} <i class="fas fa-bug" (click)="openDebug(task)"></i></td>
       <td>
         <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input checkbox-1x" id="checkBox{{i}}" [disabled]="true">
+          <input type="checkbox" class="form-check-input checkbox-1x" id="checkBox{{i}}" [disabled]="true" [checked]="task.completeDate">
         </div>
       </td>
       <td [innerHTML]="task | displayTaskBody | async"></td>

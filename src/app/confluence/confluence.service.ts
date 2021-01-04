@@ -11,9 +11,9 @@ export class ConfluenceService {
 
   constructor() { }
 
-  async test() {
-    await this.getConfluenceApi().getMyTasks();
-    await this.getConfluenceApi().addNewTask(`<span class=\"placeholder-inline-tasks\">test content from angular <ac:link><ri:user ri:userkey=\"8a7f808974eb39120174f94654350712\" /></ac:link></span>`)
+  async addNewTask(text: string) {
+    const myself = await this.getConfluenceApi().getMyself();
+    return await this.getConfluenceApi().addNewTask(`<span class=\"placeholder-inline-tasks\">${text} - <ac:link><ri:user ri:accountId=\"${myself.accountId}\" ri:username=\"${myself.accountId}\" /></ac:link></span>`)
   }
 
   isLoggedIn() {
