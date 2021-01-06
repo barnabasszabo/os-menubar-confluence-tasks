@@ -1,7 +1,6 @@
-Generate api token: https://id.atlassian.com/manage-profile/security/api-tokens
 
-# Display your confluence tasks, and create a new one with a really fast way easily from your trayBar.
-
+# What is this project
+Display your confluence tasks, and create a new one with a really fast way easily from your trayBar.
 
 ## How to install
 Download from [releases](https://github.com/barnabasszabo/os-menubar-confluence-tasks/releases), and execute the binaries.
