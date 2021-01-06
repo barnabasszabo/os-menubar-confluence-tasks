@@ -1,7 +1,8 @@
 import { ConfluenceService } from './../confluence/confluence.service';
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, ViewChild, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ElectronService } from '../core/services';
 
 @Component({
   selector: 'app-task',
@@ -9,6 +10,8 @@ import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
+
+  @ViewChild('taskTextElem') taskTextElem: ElementRef;
 
   refreshActiveTableEventsSubject: Subject<void> = new Subject<void>();
   refreshInactiveTableEventsSubject: Subject<void> = new Subject<void>();
@@ -22,9 +25,16 @@ export class TaskComponent implements OnInit {
   dateModel: NgbDateStruct;
   today = this.calendar.getToday();
 
-  constructor(public confluenceService: ConfluenceService, private calendar: NgbCalendar) { }
+  constructor(public confluenceService: ConfluenceService, private calendar: NgbCalendar, private electronService: ElectronService) { }
 
   ngOnInit(): void {
+
+    this.electronService.getIpcRenderer().send('onWindowShowSubscription');
+    this.electronService.getIpcRenderer().on('onWindowShow', (event, args) => {
+      console.log(`onWindowShow`, event, args);
+      this.focusInputElem();
+     });
+
     this.reset();
     this.init().then();
   }
@@ -42,6 +52,15 @@ export class TaskComponent implements OnInit {
     this.newTaskText = null;
     this.dateModel = null;
     this.onSubmitted = false;
+    this.focusInputElem();
+  }
+
+  focusInputElem(event?) {
+    console.log(`FIRED`, event);
+
+    setTimeout(()=>{
+      this.taskTextElem.nativeElement.focus();
+    },0);
   }
 
   async onNewTask() {

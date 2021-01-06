@@ -21,6 +21,7 @@ import { ConfluenceUserPipe } from './confluence/confluence-user.pipe';
 import { ConfluenceContentTitlePipe } from './confluence/confluence-content-title.pipe';
 import { TaskTableComponent } from './task/task-table/task-table.component';
 import { TaskDebugComponent } from './task/task-debug/task-debug.component';
+import { AutofocusDirective } from './autofocus.directive';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -28,7 +29,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, TaskComponent, TaskSortableHeaderDirective, DisplayTaskBody, ConfluenceUserPipe, ConfluenceContentTitlePipe, TaskTableComponent, TaskDebugComponent,],
+  declarations: [AppComponent, LoginComponent, TaskComponent, TaskSortableHeaderDirective, DisplayTaskBody, ConfluenceUserPipe, ConfluenceContentTitlePipe, TaskTableComponent, TaskDebugComponent, AutofocusDirective,],
   imports: [
     BrowserModule, BrowserAnimationsModule,
     NgbModule,

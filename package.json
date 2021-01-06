@@ -1,11 +1,11 @@
 {
-  "name": "angular-electron",
-  "version": "9.0.3",
-  "description": "Angular 11 with Electron (Typescript + SASS + Hot Reload)",
+  "name": "my-confluence-task-menubar",
+  "version": "1.0.0",
+  "description": "My confluence tasks in OS menubar",
   "homepage": "https://github.com/maximegris/angular-electron",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Barnabas Szabo",
+    "email": "barnabas.szabo@gmail.com"
   },
   "keywords": [
     "angular",
@@ -22,6 +22,22 @@
   ],
   "main": "main.js",
   "private": true,
+  "build": {
+    "appId": "hu.szabobarnabas.my-confluence-task-menubar",
+    "productName": "my-confluence-task-menubar",
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "dmg": {
+      "icon": false
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Development"
+    }
+  },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
@@ -29,7 +45,7 @@
     "build": "npm run electron:serve-tsc && ng build --base-href ./",
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
-    "ng:serve": "ng serve -c web -o",
+    "ng:serve": "ng serve -c web",
     "electron:serve-tsc": "tsc -p tsconfig.serve.json",
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",

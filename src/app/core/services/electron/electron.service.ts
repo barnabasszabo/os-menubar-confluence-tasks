@@ -33,4 +33,8 @@ export class ElectronService {
       this.fs = window.require('fs');
     }
   }
+
+  getIpcRenderer() {
+    return this.ipcRenderer;
+  }
 }

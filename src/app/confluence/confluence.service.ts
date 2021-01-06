@@ -16,7 +16,9 @@ export class ConfluenceService {
     const myself = await this.getConfluenceApi().getMyself();
     let dateText = ``;
     if (date) {
-      dateText = `due date: <time datetime="${date.year}-${date.month}-${date.day}" /> `;
+      const month = date.month < 10 ? `0${date.month}` : `${date.month}`;
+      const day = date.day < 10 ? `0${date.day}` : `${date.day}`;
+      dateText = `due date: <time datetime="${date.year}-${month}-${day}" /> `;
     }
     return await this.getConfluenceApi().addNewTask(`<span class="placeholder-inline-tasks">${text} - ${dateText}<ac:link><ri:user ri:accountId="${myself.accountId}" ri:username="${myself.accountId}" /></ac:link></span>`);
   }
