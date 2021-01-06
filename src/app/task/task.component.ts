@@ -1,5 +1,7 @@
 import { ConfluenceService } from './../confluence/confluence.service';
 import { OnInit, Component } from '@angular/core';
+import { Subject } from 'rxjs';
+import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-task',
@@ -8,14 +10,22 @@ import { OnInit, Component } from '@angular/core';
 })
 export class TaskComponent implements OnInit {
 
+  refreshActiveTableEventsSubject: Subject<void> = new Subject<void>();
+  refreshInactiveTableEventsSubject: Subject<void> = new Subject<void>();
+
   settingBlockDisplay = false;
   active = 1;
   newTaskText = '';
   errorMsg: string = null;
+  onSubmitted = false;
 
-  constructor(public confluenceService: ConfluenceService) { }
+  dateModel: NgbDateStruct;
+  today = this.calendar.getToday();
+
+  constructor(public confluenceService: ConfluenceService, private calendar: NgbCalendar) { }
 
   ngOnInit(): void {
+    this.reset();
     this.init().then();
   }
 
@@ -27,10 +37,23 @@ export class TaskComponent implements OnInit {
     }
   }
 
+  reset() {
+    this.errorMsg = null;
+    this.newTaskText = null;
+    this.dateModel = null;
+    this.onSubmitted = false;
+  }
+
   async onNewTask() {
-    console.log(`submitted!`, this.newTaskText);
-    await this.confluenceService.addNewTask(this.newTaskText);
-    // TODO: refrsh the table
+    this.onSubmitted = true;
+    await this.confluenceService.addNewTask(this.newTaskText, this.dateModel);
+    this.refreshActiveTableEventsSubject.next();
+    this.reset();
+  }
+
+  doAllTableRefresh() {
+    this.refreshActiveTableEventsSubject.next();
+    this.refreshInactiveTableEventsSubject.next();
   }
 
   doLogout() {

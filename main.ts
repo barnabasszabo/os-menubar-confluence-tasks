@@ -5,9 +5,11 @@ import * as url from 'url';
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
+let tray = undefined;
 
+// app.dock.hide();
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
-app.commandLine.appendSwitch('disable-site-isolation-trials')
+app.commandLine.appendSwitch('disable-site-isolation-trials');
 
 function createWindow(): BrowserWindow {
 

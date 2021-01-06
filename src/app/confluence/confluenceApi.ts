@@ -5,8 +5,8 @@ import { ConfluenceConnection } from './ConfluenceConnection.model';
 const fetch = require('node-fetch');
 const Bluebird = require('bluebird');
 fetch.Promise = Bluebird;
-// const fs = require(`fs`);
 
+// Rest API: https://developer.atlassian.com/cloud/confluence/rest/intro/
 export class ConfluenceApi {
 
     connInfo: ConfluenceConnection;
@@ -55,7 +55,6 @@ export class ConfluenceApi {
       await this.post(`${this.baseUrl}/inlinetasks/1/task/${task.contentId}/${task.id}/`, {"status": (isCheckedIn ? "CHECKED" : "UNCHECKED"), "trigger":"VIEW_PAGE"});
     }
 
-    // taskbody == <span class=\"placeholder-inline-tasks\">test content ${(count + 1)} <ac:link><ri:user ri:userkey=\"8a7f808974eb39120174f94654350712\" /></ac:link></span>
     async addNewTask(taskBody: string) {
         const myTaskPageContent = await this.getOrCreateMyTaskPageContent();
         const count = (myTaskPageContent.body.storage.value.match(/<ac:task-id>/g) || []).length;
@@ -104,6 +103,7 @@ export class ConfluenceApi {
         const myself = await this.getMyself();
         return `My Todo list: ${myself.publicName}`;
     }
+
     async getPageData(pageId: string | number) {
       if (!pageId) { return null; }
       if (!this.pageCache[pageId]) {
@@ -115,6 +115,7 @@ export class ConfluenceApi {
       }
       return this.pageCache[pageId] || null;
     }
+
     async getOrCreateMyTaskPageContent() {
         const title = await this.getMyTaskPageTitle();
         const mySpace = await this.getOrCreateMySpace();

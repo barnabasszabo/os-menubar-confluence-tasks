@@ -2,8 +2,10 @@ import { ConfluenceService } from './../../confluence/confluence.service';
 import { TaskDebugComponent } from './../task-debug/task-debug.component';
 import { TaskDTO } from './../../confluence/TaskDTO';
 import { SortEvent, TaskSortableHeaderDirective } from './../../task-sortable-header.directive';
-import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subscription } from 'rxjs';
+import { differenceWith, isEqual } from 'lodash';
 
 const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
@@ -12,25 +14,43 @@ const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 
   templateUrl: './task-table.component.html',
   styleUrls: ['./task-table.component.scss']
 })
-export class TaskTableComponent implements OnInit {
+export class TaskTableComponent implements OnInit, OnDestroy {
 
   @ViewChildren(TaskSortableHeaderDirective) headers: QueryList<TaskSortableHeaderDirective>;
 
   @Input() active: boolean;
+  @Input() refreshEvent: Observable<void>;
 
   tasks: TaskDTO[] = [];
   dataDisplayFormat = `fullDate`;
 
-  filter: string;
+  private eventsSubscription: Subscription;
 
   constructor(private modalService: NgbModal, private confluenceService: ConfluenceService) { }
 
   ngOnInit(): void {
-    this.init().then().catch(e => console.error(e));
+    this.init();
+    this.eventsSubscription = this.refreshEvent.subscribe(() => this.doRefresh(true));
   }
 
-  async init() {
-    this.tasks = await this.confluenceService.getConfluenceApi().getMyTasks(this.active);
+  ngOnDestroy() {
+    this.eventsSubscription.unsubscribe();
+  }
+
+  init(timeout = 0) {
+    setTimeout(() => {
+      this.doRefresh();
+      this.init( (1000 * 60) );
+    }, timeout);
+  }
+
+  doRefresh(force = false) {
+    this.confluenceService.getConfluenceApi().getMyTasks(this.active).then(data =>  {
+      const diff = differenceWith(data, this.tasks, isEqual);
+      if (force || (diff && diff.length > 0)) {
+        this.tasks = data;
+      }
+    });
   }
 
   openDebug(task: TaskDTO) {

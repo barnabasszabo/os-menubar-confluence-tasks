@@ -1,6 +1,7 @@
 import { ConfluenceConnection } from './ConfluenceConnection.model';
 import { ConfluenceApi } from './confluenceApi';
 import { Injectable } from '@angular/core';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,13 @@ export class ConfluenceService {
 
   constructor() { }
 
-  async addNewTask(text: string) {
+  async addNewTask(text: string, date?: NgbDateStruct) {
     const myself = await this.getConfluenceApi().getMyself();
-    return await this.getConfluenceApi().addNewTask(`<span class=\"placeholder-inline-tasks\">${text} - <ac:link><ri:user ri:accountId=\"${myself.accountId}\" ri:username=\"${myself.accountId}\" /></ac:link></span>`)
+    let dateText = ``;
+    if (date) {
+      dateText = `due date: <time datetime="${date.year}-${date.month}-${date.day}" /> `;
+    }
+    return await this.getConfluenceApi().addNewTask(`<span class="placeholder-inline-tasks">${text} - ${dateText}<ac:link><ri:user ri:accountId="${myself.accountId}" ri:username="${myself.accountId}" /></ac:link></span>`);
   }
 
   isLoggedIn() {
