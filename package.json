@@ -24,7 +24,7 @@
   "private": true,
   "build": {
     "appId": "hu.szabobarnabas.os-menubar-confluence-tasks",
-    "productName": "os-menubar-confluence-tasks",
+    "productName": "My Confluence Tasks",
     "mac": {
       "category": "public.app-category.developer-tools"
     },

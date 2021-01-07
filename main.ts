@@ -76,7 +76,7 @@ function createWindow(): BrowserWindow {
 }
 
 const createTray = () => {
-  tray = new Tray(path.join('tray-icon.png'));
+  tray = new Tray( path.join(__dirname, 'tray-icon.png') );
   tray.on('click', function (event) {
     toggleWindow();
   });
@@ -104,7 +104,7 @@ const showWindow = () => {
   const position = getWindowPosition();
   win.setPosition(position.x, position.y, false);
   win.show();
-  
+
   const subscribers = onWindowShowSubscribers.filter(s => s);
   for (let i = 0; i < subscribers.length; i++) {
     const sub = subscribers[i];
