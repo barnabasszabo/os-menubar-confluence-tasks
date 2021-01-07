@@ -1,11 +1,11 @@
 {
-  "name": "my-confluence-task-menubar",
+  "name": "os-menubar-confluence-tasks",
   "version": "1.0.0",
   "description": "My confluence tasks in OS menubar",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "homepage": "http://szabobarnabas.hu",
   "author": {
     "name": "Barnabas Szabo",
-    "email": "barnabas.szabo@gmail.com"
+    "email": "git@szabobarnabas.hu"
   },
   "keywords": [
     "angular",
@@ -23,8 +23,8 @@
   "main": "main.js",
   "private": true,
   "build": {
-    "appId": "hu.szabobarnabas.my-confluence-task-menubar",
-    "productName": "my-confluence-task-menubar",
+    "appId": "hu.szabobarnabas.os-menubar-confluence-tasks",
+    "productName": "os-menubar-confluence-tasks",
     "mac": {
       "category": "public.app-category.developer-tools"
     },
@@ -42,9 +42,10 @@
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p electron:serve ng:serve",
-    "build": "npm run electron:serve-tsc && ng build --base-href ./",
-    "build:dev": "npm run build -- -c dev",
-    "build:prod": "npm run build -- -c production",
+    "build": "npm run electron:build",
+    "build:orig": "npm run electron:serve-tsc && ng build --base-href ./",
+    "build:dev": "npm run build:orig -- -c dev",
+    "build:prod": "npm run build:orig -- -c production",
     "ng:serve": "ng serve -c web",
     "electron:serve-tsc": "tsc -p tsconfig.serve.json",
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
