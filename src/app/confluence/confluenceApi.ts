@@ -1,5 +1,4 @@
 import { TaskDTO } from './TaskDTO';
-import { isatty } from 'tty';
 import { ConfluenceConnection } from './ConfluenceConnection.model';
 
 const fetch = require('node-fetch');
